@@ -28,11 +28,11 @@ contract SimpleDEX is Ownable {
             require(amountB == expectedB, "Invalid ratio");
         }
 
-        tokenA.transferFrom(msg.sender, address(this), amountA);
-        tokenB.transferFrom(msg.sender, address(this), amountB);
-
         reserveA += amountA;
         reserveB += amountB;
+
+        tokenA.transferFrom(msg.sender, address(this), amountA);
+        tokenB.transferFrom(msg.sender, address(this), amountB);
 
         emit LiquidityAdded(msg.sender, amountA, amountB);
     }
@@ -60,11 +60,11 @@ contract SimpleDEX is Ownable {
         uint256 amountBOut = (amountAIn * reserveB) / (reserveA + amountAIn);
         require(amountBOut <= reserveB, "Not enough TokenB");
 
-        tokenA.transferFrom(msg.sender, address(this), amountAIn);
-        tokenB.transfer(msg.sender, amountBOut);
-
         reserveA += amountAIn;
         reserveB -= amountBOut;
+
+        tokenA.transferFrom(msg.sender, address(this), amountAIn);
+        tokenB.transfer(msg.sender, amountBOut);
 
         emit Swap(msg.sender, address(tokenA), amountAIn, amountBOut);
     }
@@ -76,11 +76,11 @@ contract SimpleDEX is Ownable {
         uint256 amountAOut = (amountBIn * reserveA) / (reserveB + amountBIn);
         require(amountAOut <= reserveA, "Not enough TokenA");
 
-        tokenB.transferFrom(msg.sender, address(this), amountBIn);
-        tokenA.transfer(msg.sender, amountAOut);
-
         reserveB += amountBIn;
         reserveA -= amountAOut;
+
+        tokenB.transferFrom(msg.sender, address(this), amountBIn);
+        tokenA.transfer(msg.sender, amountAOut);
 
         emit Swap(msg.sender, address(tokenB), amountBIn, amountAOut);
     }
